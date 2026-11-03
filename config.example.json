@@ -1,0 +1,14 @@
+{
+  "vault": "",
+  "models_dir": "models",
+  "output_dir": "output",
+  "device": "cpu",
+  "engine": "hybrid",
+  "browser_channel": "chrome",
+  "asr_model": "paraformer-zh",
+  "vad_model": "fsmn-vad",
+  "punc_model": "ct-punc",
+  "sensevoice_model": "sensevoice",
+  "spk_model": "",
+  "download_speaker_model": false
+}

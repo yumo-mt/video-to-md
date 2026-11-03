@@ -1,0 +1,12 @@
+.venv/
+.uv-cache/
+.ms-cache/
+models/
+output/
+demo-vault/
+__pycache__/
+*.pyc
+.DS_Store
+config.json
+config.local.json
+hotwords.txt
