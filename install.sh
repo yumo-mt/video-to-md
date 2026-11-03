@@ -158,7 +158,7 @@ echo "下载当前识别引擎所需模型（已存在的模型会跳过）…"
 .venv/bin/python scripts/setup.py --models
 .venv/bin/python scripts/setup.py
 
-SKILLS_DIR="${CODEX_HOME:-$HOME/.codex}/skills"
+SKILLS_DIR="$HOME/.agents/skills"
 SKILL_LINK="$SKILLS_DIR/video-to-md"
 if [[ "$ROOT_DIR" != "$SKILL_LINK" ]]; then
   mkdir -p "$SKILLS_DIR"

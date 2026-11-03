@@ -56,7 +56,12 @@ def main() -> int:
         print(f"模型目录: {cfg['_models_dir']}")
         print(f"引擎: {cfg.get('engine', 'hybrid')}")
         print(f"Vault: {cfg.get('vault') or '未配置'}")
-        print("环境就绪" if not problems else "待处理：\n- " + "\n- ".join(problems))
+        if problems:
+            print("待处理：\n- " + "\n- ".join(problems))
+        elif cfg.get("vault"):
+            print("环境就绪")
+        else:
+            print("基础环境就绪；知识库尚未配置，归档时请传 --vault")
     return 1 if problems else 0
 
 

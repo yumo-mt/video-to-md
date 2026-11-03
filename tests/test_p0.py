@@ -29,6 +29,14 @@ class FakeResponse:
 
 
 class P0Tests(unittest.TestCase):
+    def test_video_only_rejects_note_before_creating_output(self):
+        with tempfile.TemporaryDirectory() as temp:
+            output = Path(temp) / "123456789012345"
+            info = {"video_id": output.name, "type": "note", "title": "图文", "images": []}
+            with self.assertRaisesRegex(ValueError, "只支持公开视频"):
+                dy_pipeline.run("unused", output, info=info, video_only=True, quiet=True)
+            self.assertFalse(output.exists())
+
     def test_model_download_selects_engine_and_skips_existing_weights(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)

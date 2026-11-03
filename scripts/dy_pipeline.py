@@ -117,7 +117,8 @@ def write_transcript_md(info: dict, text: str, out_dir: Path, *, with_ts: bool =
 
 
 def run(link: str, out_dir: Path, *, info_only=False, spk=False, save_video=True,
-        quiet=False, info: dict | None = None, engine: str = "", vault: str = "") -> dict:
+        quiet=False, info: dict | None = None, engine: str = "", vault: str = "",
+        video_only: bool = False) -> dict:
     t0 = time.time()
 
     def log(msg):
@@ -130,6 +131,8 @@ def run(link: str, out_dir: Path, *, info_only=False, spk=False, save_video=True
     log(f"   {'图文' if info['type'] == 'note' else '视频'} | {info['title'][:40]} | 作者 {info.get('author') or '—'}")
     if info_only:
         return info
+    if video_only and info["type"] != "video":
+        raise ValueError("当前版本只支持公开视频，尚不支持图文作品")
 
     vault = vault or cfg_mod.load().get("vault") or ""
     if vault:
@@ -191,6 +194,7 @@ def main():
     ap.add_argument("--output", "-o", default="", help="输出目录（默认 output/<ID>）")
     ap.add_argument("--vault", default="", help="知识库目录；用于下载前检查重复作品")
     ap.add_argument("--info-only", action="store_true", help="只解析，不下载")
+    ap.add_argument("--video-only", action="store_true", help="仅处理视频，图文在下载前停止")
     ap.add_argument("--spk", action="store_true", help="启用说话人分离")
     ap.add_argument("--engine", choices=["auto", "hybrid", "paraformer", "sensevoice"],
                     default="", help="识别引擎（默认取 config.json 的 engine）")
@@ -204,7 +208,7 @@ def main():
         out_dir = Path(args.output) if args.output else Path(cfg["output_dir"]) / str(resolved["video_id"])
         info = run(args.link, out_dir, info_only=args.info_only, spk=args.spk, info=resolved,
                    save_video=not args.no_video, quiet=args.quiet, engine=args.engine,
-                   vault=args.vault)
+                   vault=args.vault, video_only=args.video_only)
         print(json.dumps({k: v for k, v in info.items() if k in
                           ("video_id", "type", "title", "author", "text", "out_dir")},
                          ensure_ascii=False, indent=2))
