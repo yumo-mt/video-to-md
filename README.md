@@ -8,24 +8,22 @@
 
 ## 安装
 
-需要 Python 3.11+、FFmpeg、Google Chrome、网络连接，以及约 2–3 GB 的模型磁盘空间。模型从 ModelScope 原发布方下载，不包含在仓库中。
+安装本项目需要 macOS、网络连接和约 6 GB 可用磁盘空间；完整的知识归档还需要 Codex 和一个 Obsidian vault。Python、FFmpeg、浏览器运行环境、Python 依赖和语音模型由安装脚本检查并补齐；不要求预先安装 Python、Homebrew 或 Chrome。模型从 ModelScope 原发布方下载，不包含在仓库中。安装系统软件可能需要管理员密码。
+
+如果已安装 Git，可运行：
 
 ```bash
-git clone git@github.com:yumo-mt/video-to-md.git ~/.codex/skills/video-to-md
+mkdir -p ~/.codex/skills
+git clone https://github.com/yumo-mt/video-to-md.git ~/.codex/skills/video-to-md
 cd ~/.codex/skills/video-to-md
-python3 -m venv .venv
-.venv/bin/python scripts/setup.py --install
-cp config.example.json config.json
+bash install.sh
 ```
 
-编辑 `config.json` 的 `vault` 为已有的 Obsidian vault 绝对路径，也可运行时传 `--vault` 或设置 `DY_VAULT`。`models_dir` 默认在项目内。可选设置 `engine` 为 `paraformer` 或 `sensevoice` 以减少模型下载；默认 `hybrid` 需要两套识别模型。
+**没有 Git？** 在 [GitHub 页面](https://github.com/yumo-mt/video-to-md) 点 **Code → Download ZIP**，解压到任意文件夹，在终端进入该文件夹后运行 `bash install.sh`。脚本会将该目录加入 Codex 的 Skill 目录。它会先列出缺失项并征求确认，再安装 Homebrew（若需要）、Python 3.13、FFmpeg 和 Playwright Chromium（若没有 Chrome），创建项目专用 Python 环境、下载模型，并询问现有 Obsidian vault 路径。已有依赖和模型会复用。
 
-```bash
-.venv/bin/python scripts/setup.py --models
-.venv/bin/python scripts/setup.py
-```
+只检查、不安装可运行 `bash install.sh --check`。需要修改设置时编辑本地 `config.json`；也可运行时传 `--vault` 或设置 `DY_VAULT`。默认 `hybrid` 需要两套识别模型；把 `engine` 改为 `paraformer` 或 `sensevoice` 可以减少模型下载。
 
-若没有 Google Chrome，可将 `browser_channel` 设为 `chromium`，并运行 `.venv/bin/python -m playwright install chromium`。环境检查通过后，重新打开 Codex 聊天即可使用安装在默认 Skill 目录中的本 Skill；其他 Agent 可按 [SKILL.md](SKILL.md) 的步骤执行。
+安装完成后重新打开 Codex 聊天即可使用本 Skill；其他 Agent 可按 [SKILL.md](SKILL.md) 的步骤执行。需要手动排错时，运行 `.venv/bin/python scripts/setup.py` 查看具体缺失项。
 
 ## 使用
 

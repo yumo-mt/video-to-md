@@ -5,7 +5,7 @@ description: 将公开抖音视频提炼为 Obsidian 知识笔记。用户提供
 
 # 抖音视频 → Obsidian 知识笔记
 
-工作目录是本 SKILL.md 所在目录。使用 `.venv/bin/python` 运行脚本。首次使用先按 README 配置、下载模型，并运行 `scripts/setup.py` 自检。只处理用户提供的公开视频链接；遇到私密、已删除或登录受限内容，报告错误。
+工作目录是本 SKILL.md 所在目录。首次使用先在交互式终端运行 `bash install.sh`，它会安装缺失环境和模型并引导配置知识库；之后使用 `.venv/bin/python` 运行脚本。可用 `bash install.sh --check` 只检查环境。只处理用户提供的公开视频链接；遇到私密、已删除或登录受限内容，报告错误。
 
 ## 处理步骤
 
