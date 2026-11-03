@@ -2,8 +2,6 @@
 
 把公开抖音视频转成按主题分类的 Obsidian 知识笔记。视频解析和下载使用网络；FFmpeg 与 FunASR 在本机转写，转写无需 API Key。标题、摘要、分类、标签和有依据的知识关联由运行本 Skill 的 Agent 生成，Agent 的模型费用取决于你选用的服务。
 
-项目思路参考了 [zzybrim/douyin-obsidian](https://github.com/zzybrim/douyin-obsidian)。本项目代码采用 [MIT 许可](LICENSE)；下载的模型和依赖遵循各自的上游许可。
-
 ## 支持范围
 
 首版面向 macOS、Codex、公开可访问的抖音视频和本地 Obsidian vault。图文提取代码仍处于实验阶段，暂不列为支持功能。私密、已删除或需要登录的视频无法保证解析。
