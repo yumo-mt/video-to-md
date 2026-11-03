@@ -16,15 +16,20 @@ import config as cfg_mod  # noqa: E402
 def check() -> list[str]:
     problems = cfg_mod.check()
     try:
-        from playwright.sync_api import sync_playwright  # noqa: F401
+        from playwright.sync_api import sync_playwright
     except ImportError:
         problems.append("未安装 playwright")
+        sync_playwright = None
     channel = cfg_mod.load().get("browser_channel", "chrome")
     if channel == "chrome" and not any(p.exists() for p in (
         Path("/Applications/Google Chrome.app"),
         Path.home() / "Applications/Google Chrome.app",
     )):
         problems.append("未找到 Google Chrome；请安装 Chrome，或配置 browser_channel 为 chromium")
+    elif channel == "chromium" and sync_playwright:
+        with sync_playwright() as playwright:
+            if not Path(playwright.chromium.executable_path).is_file():
+                problems.append("Playwright Chromium 未安装；请运行 bash install.sh")
     return problems
 
 

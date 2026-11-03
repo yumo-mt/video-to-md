@@ -33,7 +33,7 @@ def download_required(cfg: dict) -> None:
         if (target / weight).is_file():
             print(f"已存在: {name}")
             continue
-        print(f"下载 {model_id} → {target}", flush=True)
+        print(f"下载 https://modelscope.cn/models/{model_id} → {target}", flush=True)
         snapshot_download(model_id=model_id, local_dir=str(target))
         if not (target / weight).is_file():
             raise FileNotFoundError(f"模型下载后缺少权重: {target / weight}")

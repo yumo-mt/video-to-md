@@ -25,6 +25,20 @@ bash install.sh
 
 安装完成后重新打开 Codex 聊天即可使用本 Skill；其他 Agent 可按 [SKILL.md](SKILL.md) 的步骤执行。需要手动排错时，运行 `.venv/bin/python scripts/setup.py` 查看具体缺失项。
 
+### 语音模型的来源和位置
+
+`bash install.sh` 从以下 ModelScope 页面下载模型，默认放在项目的 `models/` 下；已有权重会跳过。`config.json` 的 `models_dir` 可改为其他目录，表中的子目录名保持不变。模型权重不会提交到 Git。
+
+| 用途 | 模型页面 | 本地目录 | 下载条件 |
+| --- | --- | --- | --- |
+| 语音分段 | [FSMN-VAD](https://modelscope.cn/models/iic/speech_fsmn_vad_zh-cn-16k-common-pytorch) | `models/fsmn-vad/` | 所有引擎 |
+| 中文识别 | [SeACo-Paraformer](https://modelscope.cn/models/iic/speech_seaco_paraformer_large_asr_nat-zh-cn-16k-common-vocab8404-pytorch) | `models/paraformer-zh/` | `hybrid`、`auto`、`paraformer` |
+| 标点恢复 | [CT-Transformer](https://modelscope.cn/models/iic/punc_ct-transformer_zh-cn-common-vocab272727-pytorch) | `models/ct-punc/` | `hybrid`、`auto`、`paraformer` |
+| 多语种识别 | [SenseVoiceSmall](https://modelscope.cn/models/iic/SenseVoiceSmall) | `models/sensevoice/` | `hybrid`、`auto`、`sensevoice` |
+| 说话人识别 | [CAM++](https://modelscope.cn/models/iic/speech_campplus_sv_zh-cn_16k-common) | `models/campplus/` | 可选；在 `config.json` 设置 `spk_model` 为 `campplus`、`download_speaker_model` 为 `true` 后重跑安装脚本 |
+
+默认 `hybrid` 下载前四项；CAM++ 默认不下载。运行视频提取时加 `--spk` 才会启用已配置的说话人模型。下载与目录选择的实现见 `scripts/download_models.py` 和 `config.example.json`。
+
 ## 使用
 
 向 Agent 提供公开抖音分享链接和目标 vault，要求提炼知识笔记。手动提取逐字稿可运行：
