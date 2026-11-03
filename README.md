@@ -1,5 +1,7 @@
 # video-to-md
 
+![从短视频到知识笔记的视觉封面](images/readme-cover.png)
+
 把公开抖音视频转成按主题分类的 Obsidian 知识笔记。视频解析和下载使用网络；FFmpeg 在本机提取音频，FunASR 在本机转写，不需要语音识别 API Key。标题、摘要、分类、标签和知识关联由 Codex 等 AI 助手生成，模型费用取决于你选用的服务。
 
 ## 支持范围
