@@ -1,113 +1,87 @@
-# video-to-md
+# VideoToMD｜视频转知识
 
-## Mac 桌面版（开发中）
+把公开抖音视频或本地媒体文件转换为视频、音频、逐字稿，或整理成 Obsidian 笔记。可以只执行其中一步，也可以从抖音链接完成整个流程。
 
-在完成下方安装后，运行 `.venv/bin/python -m pip install -r requirements-app.txt` 和
-`.venv/bin/python mac_app.py`，可启动桌面界面。输入支持公开抖音链接、本地视频和本地音频；
-目标可选视频、音频、逐字稿或 Obsidian 笔记（笔记目前要求抖音链接）。软件只执行目标所需步骤。
-勾选“保留视频／音频／逐字稿”可另存中间文件；未保留的任务缓存成功后保留 24 小时，
-在 App 运行期间或下次启动时清理。失败任务缓存保留 7 天供检查。
-Obsidian 笔记需要选择知识库，并填写兼容 Chat Completions 的 HTTPS API 地址、模型和 API Key；
-API Key 存入 macOS 钥匙串，逐字稿会发送到所选服务。转写任务首次使用时需下载约 2.1 GB 语音模型；
-只下载视频或提取音频无需下载模型。
-使用 DeepSeek 时点击“使用 DeepSeek 配置”，程序会填写官方 Chat Completions 地址和 `deepseek-flash` 模型，
-用户只需再输入自己的 DeepSeek API Key。旧版保存的 `https://api.deepseek.com` 根地址会自动补齐接口路径。
-再次处理同一来源时，保存目录中由本次任务生成的同名文件会覆盖；目录内其他文件保留。
-本地视频可提取音频或转写，本地音频可转写；界面不会提供与输入同类型的目标。
-转写与笔记任务可勾选“区分说话人”。该选项默认关闭，只有用户勾选后才提示下载额外的 CAM++ 模型；
-启用后逐字稿与 SRT 会标记“说话人 1／2”等，AI 笔记也会收到带标记的逐字稿。
-说话人归属为模型推断，重叠讲话、相似声音和较长录音可能出现误分，需人工核对。
+![VideoToMD 封面](images/readme-cover.png)
 
-源码运行需要先按下方步骤安装环境。在 Apple Silicon Mac 上构建安装包时，先运行
-`PLAYWRIGHT_BROWSERS_PATH="$PWD/vendor-browsers" .venv/bin/python -m playwright install chromium --no-shell`，
-再运行 `bash build_mac.sh` 构建 `.app`，最后运行
-`bash package_dmg.sh` 生成 `dist/VideoToMD-arm64.dmg`。构建前需在项目环境安装
-`requirements-app.txt` 和 `pyinstaller`。当前 DMG 供本机验证，内含 `.app`、
-FFmpeg、Chromium 和“应用程序”快捷方式；目标 Mac 无需预装 FFmpeg 或 Chrome。
-正式发布前仍需在干净的 Mac 上跑完整流程、准备第三方组件许可材料，并完成 Developer ID 签名与公证。
+## 下载 macOS 版
 
-## 将你的抖音只收藏的视频整理成你的知识库
+**[下载 VideoToMD v0.1.0 beta 1（Apple Silicon）](https://github.com/yumo-mt/video-to-md/releases/tag/v0.1.0-beta.1)**
 
-![从短视频到知识笔记的视觉封面](images/readme-cover.png)
+在 Release 页的 **Assets** 中下载 `VideoToMD-arm64.dmg`。`Source code (zip)` 和 `Source code (tar.gz)` 只有源码，不能直接安装。
 
-把公开抖音视频转成按主题分类的 Obsidian 知识笔记。视频解析和下载使用网络；FFmpeg 在本机提取音频，FunASR 在本机转写，不需要语音识别 API Key。标题、摘要、分类、标签和知识关联由 Codex 等 AI 助手生成，模型费用取决于你选用的服务。
+1. 打开 DMG，把 `VideoToMD.app` 拖入“应用程序”。
+2. 从“应用程序”启动 VideoToMD，选择输入来源和需要的最终产物。
+3. 如果要转写或生成笔记，在 App 顶部按提示下载语音模型；只下载视频或提取音频无需下载模型。
 
-## 支持范围
+当前安装包仅适用于 **Apple Silicon Mac**。DMG 约 725 MB，已包含 App 所需的 Python 运行环境、FFmpeg 和 Chromium，无需预装 Python、FFmpeg 或 Chrome。语音模型**不在 DMG 中**：首次使用转写功能时，App 会提示下载约 2.1 GB 的模型，保存到 `~/Library/Application Support/video-to-md/models/`。选择“区分说话人”时还需按提示下载额外模型。
 
-首版面向 macOS、Codex、公开可访问的抖音视频和本地 Obsidian 知识库。图文、私密、已删除或需要登录的作品暂不支持。
+此版本尚未完成 Apple Developer ID 签名与公证，macOS 可能阻止首次打开。请确认文件来自本仓库的 Release 页面，再按系统提示手动允许打开。发布文件的 SHA-256 为：
 
-## 安装
-
-安装本项目需要 macOS、网络连接和约 6 GB 可用磁盘空间；完整的知识归档还需要 Codex 和一个 Obsidian 知识库（vault）。Python、FFmpeg、浏览器运行环境、Python 依赖和语音模型由安装脚本检查并补齐；不要求预先安装 Python、Homebrew 或 Chrome。模型从 ModelScope 原发布方下载，不包含在仓库中。安装系统软件可能需要管理员密码。
-
-如果已安装 Git，可运行：
-
-```bash
-mkdir -p ~/.agents/skills
-git clone https://github.com/yumo-mt/video-to-md.git ~/.agents/skills/video-to-md
-cd ~/.agents/skills/video-to-md
-bash install.sh
+```text
+5546e46b0d481187c742ca9840e31fdc80b664b017940b89a9f7fa237a6dab01  VideoToMD-arm64.dmg
 ```
 
-**没有 Git？** 在 [GitHub 页面](https://github.com/yumo-mt/video-to-md) 点 **Code → Download ZIP**，解压后打开终端，输入 `cd `（末尾有空格），把解压后的文件夹拖进终端，再按回车。随后运行 `bash install.sh`。脚本会把该目录加入 Codex 的 Skill 目录。它会先列出缺失项并征求确认，再按需安装 Homebrew、Python 3.13、FFmpeg 和 Playwright Chromium，安装 Python 依赖、下载模型，并询问已有 Obsidian 知识库的路径。
+可在终端运行 `shasum -a 256 ~/Downloads/VideoToMD-arm64.dmg` 核对下载文件。
 
-已有依赖和模型会复用。只检查、不安装可运行 `bash run.sh check`。需要修改设置时编辑本地 `config.json`；默认 `hybrid` 使用两套识别模型，改成 `paraformer` 或 `sensevoice` 可以减少下载量。
+## 功能与使用
 
-安装脚本会自动创建项目专用的 Python 环境，使用者无需手动管理。Codex 会自动发现新 Skill；如果没有出现，重启 Codex。其他 Agent 可按 [SKILL.md](SKILL.md) 的步骤执行。
+| 输入来源 | 可选最终产物 |
+| --- | --- |
+| 公开抖音视频链接 | 视频文件、音频文件、逐字稿、Obsidian 笔记 |
+| 本地视频 | 音频文件、逐字稿 |
+| 本地音频 | 逐字稿 |
 
-### 语音模型的来源和位置
+软件只执行得到所选产物所需的步骤。例如，从抖音链接生成 Obsidian 笔记会依次下载视频、提取音频、转写、整理笔记；只选“视频文件”则下载后结束。可以勾选“保留视频”“保留音频”“保留逐字稿与字幕”保存中间产物。未保留的任务缓存会在**成功 24 小时后**清理；失败任务缓存保留 7 天供排查。同一来源再次处理时，本次任务生成的同名输出文件会覆盖。
 
-`bash install.sh` 从以下 ModelScope 页面下载模型，默认放在项目的 `models/` 下；已有权重会跳过。`config.json` 的 `models_dir` 可改为其他目录，表中的子目录名保持不变。模型权重不会提交到 Git。
+逐字稿和笔记可以选择“区分说话人”。说话人标记由模型推断，重叠讲话、声音相近或长录音可能分错，请人工核对。界面会显示模型状态、下载进度信息和处理步骤；模型下载目前按文件阶段显示，**不显示准确的字节百分比**。
 
-| 用途 | 模型页面 | 本地目录 | 下载条件 |
-| --- | --- | --- | --- |
-| 语音分段 | [FSMN-VAD](https://modelscope.cn/models/iic/speech_fsmn_vad_zh-cn-16k-common-pytorch) | `models/fsmn-vad/` | 所有引擎 |
-| 中文识别 | [SeACo-Paraformer](https://modelscope.cn/models/iic/speech_seaco_paraformer_large_asr_nat-zh-cn-16k-common-vocab8404-pytorch) | `models/paraformer-zh/` | `hybrid`、`auto`、`paraformer` |
-| 标点恢复 | [CT-Transformer](https://modelscope.cn/models/iic/punc_ct-transformer_zh-cn-common-vocab272727-pytorch) | `models/ct-punc/` | `hybrid`、`auto`、`paraformer` |
-| 多语种识别 | [SenseVoiceSmall](https://modelscope.cn/models/iic/SenseVoiceSmall) | `models/sensevoice/` | `hybrid`、`auto`、`sensevoice` |
-| 说话人识别 | [CAM++](https://modelscope.cn/models/iic/speech_campplus_sv_zh-cn_16k-common) | `models/campplus/` | 可选；在 `config.json` 设置 `spk_model` 为 `campplus`、`download_speaker_model` 为 `true` 后重跑安装脚本 |
+### 生成 Obsidian 笔记
 
-默认 `hybrid` 下载前四项；CAM++ 默认不下载。运行视频提取时加 `--spk` 才会启用已配置的说话人模型。下载与目录选择的实现见 `scripts/download_models.py` 和 `config.example.json`。
+目前笔记功能的输入是**公开抖音视频链接**。选择 Obsidian 知识库文件夹，并填写兼容 Chat Completions 的 HTTPS API 地址、模型名称和自己的 API Key。使用 DeepSeek 可以点击“使用 DeepSeek 配置”填入接口地址和模型，再填写 API Key。
 
-## 使用
+语音识别在本机运行，不需要语音识别 API Key。生成笔记时，逐字稿会发送给你选择的 AI 服务；费用和数据处理规则取决于该服务。API Key 保存在 macOS 钥匙串中，首次使用请允许钥匙串访问。
 
-安装后，在 Codex 中输入：`用 $video-to-md 把这条公开抖音视频整理成知识笔记：<链接>`。Codex 会依照 [SKILL.md](SKILL.md) 完成转写、提炼和归档。
+## 当前限制
 
-如只想手动提取逐字稿，在项目目录运行：
+- 仅处理公开可访问的抖音**视频**；图文、私密、已删除或需要登录的作品不支持。抖音页面变化或访问限制也可能导致下载失败。
+- 这是测试版，尚未在干净的 Mac 上完成完整流程验证；处理重要内容前请检查输出。
+- 本地视频和本地音频暂不能直接生成 Obsidian 笔记。
+
+## 从源码运行 macOS App
+
+以下步骤面向开发者；普通用户直接下载上面的 DMG 即可。源码运行需要 macOS、Python 3.13、FFmpeg 和 Chromium：
 
 ```bash
+git clone -b codex/mac-app https://github.com/yumo-mt/video-to-md.git
+cd video-to-md
+python3.13 -m venv .venv
+.venv/bin/python -m pip install -r requirements-app.txt
+.venv/bin/python -m playwright install chromium --no-shell
+VIDEO_TO_MD_BROWSER_CHANNEL=chromium .venv/bin/python mac_app.py
+```
+
+在 Apple Silicon Mac 上重新构建安装包，还需安装 `pyinstaller`，然后运行：
+
+```bash
+.venv/bin/python -m pip install pyinstaller
+PLAYWRIGHT_BROWSERS_PATH="$PWD/vendor-browsers" .venv/bin/python -m playwright install chromium --no-shell
+bash build_mac.sh
+bash package_dmg.sh
+```
+
+构建产物是 `dist/VideoToMD-arm64.dmg`。正式分发前仍需检查第三方组件许可，并完成 Developer ID 签名、公证和独立 Mac 验收。
+
+## Codex Skill 与命令行
+
+仓库也保留原有的 [Codex Skill](SKILL.md) 和命令行流程。它们与桌面 App 是两种使用方式；Skill 可将公开抖音视频转写、提炼并归档到 Obsidian。安装脚本见 [install.sh](install.sh)，配置示例见 [config.example.json](config.example.json)。
+
+```bash
+bash install.sh
+bash run.sh check
 bash run.sh extract '<公开抖音分享链接>'
 ```
 
-命令会输出临时文件夹路径 `out_dir`，目录名是作品 ID。安装时若没有设置知识库路径，可加 `--vault '<知识库文件夹路径>'`；设置后，下载前会检查这条作品是否已经归档。脚本只负责本地转写。
+在 Codex 中可输入：`用 $video-to-md 把这条公开抖音视频整理成知识笔记：<链接>`。命令行的 `extract` 输出临时目录 `out_dir`；生成带原文依据的 `knowledge.json` 后，可执行 `bash run.sh preview 'output/<作品 ID>'` 和 `bash run.sh archive 'output/<作品 ID>'`。详细步骤见 [SKILL.md](SKILL.md)。
 
-以下归档命令供 AI 助手或手动操作的用户使用。执行前，必须先根据逐字稿生成带原文依据的 `knowledge.json`；只想拿到逐字稿时无需继续：
-
-```bash
-bash run.sh preview 'output/<作品 ID>'
-bash run.sh archive 'output/<作品 ID>'
-```
-
-如果安装时没有设置知识库路径，归档命令也需加 `--vault '<知识库文件夹路径>'`。笔记写入 `<知识库>/<主题分类>/<知识标题>.md`，属性包含原视频地址 `url`，相关知识笔记会互相链接。归档成功后，该作品的临时视频、逐字稿等文件会被删除；失败时保留供重试。知识库中不会创建来源目录或 `assets` 目录。
-
-## 成本与数据流
-
-| 环节 | 执行位置 | 费用说明 |
-| --- | --- | --- |
-| 链接解析、视频下载 | 网络 + 本机 Chrome 或 Chromium | 无本项目 API Key |
-| 音频处理 | 本机 FFmpeg | 无模型费用 |
-| 语音识别 | 本机 FunASR、Paraformer、SenseVoice 等 | 首次下载模型；运行时无 ASR API 费用 |
-| 摘要、分类、标题、标签、知识关联 | 用户选用的 AI 助手 | 依该服务计费 |
-| 笔记写入、双向链接、临时文件清理 | 本机脚本 | 无模型费用 |
-
-## 目录与隐私
-
-`config.json`、`hotwords.txt`、`models/`、`output/`、`.venv/` 和缓存均被 Git 忽略。`config.example.json` 是可公开的模板。不要把真实 vault、视频、逐字稿或自己的术语表提交到公开仓库。`models/` 不随 Skill 分发；相关模型和依赖各自遵循其上游许可。
-
-## 检查安装
-
-```bash
-bash run.sh check
-```
-
-真实抖音页面可能变化，浏览器解析也可能受访问限制。遇到失败时先检查链接是否公开可访问，再查看脚本报错。
+本地 `config.json`、模型、输出、缓存和 API Key 不会随源码提交。语音模型从 ModelScope 原发布方下载；相关依赖和模型分别遵循上游许可。
