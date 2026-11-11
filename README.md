@@ -1,5 +1,31 @@
 # video-to-md
 
+## Mac 桌面版（开发中）
+
+在完成下方安装后，运行 `.venv/bin/python -m pip install -r requirements-app.txt` 和
+`.venv/bin/python mac_app.py`，可启动桌面界面。输入支持公开抖音链接、本地视频和本地音频；
+目标可选视频、音频、逐字稿或 Obsidian 笔记（笔记目前要求抖音链接）。软件只执行目标所需步骤。
+勾选“保留视频／音频／逐字稿”可另存中间文件；未保留的任务缓存成功后保留 24 小时，
+在 App 运行期间或下次启动时清理。失败任务缓存保留 7 天供检查。
+Obsidian 笔记需要选择知识库，并填写兼容 Chat Completions 的 HTTPS API 地址、模型和 API Key；
+API Key 存入 macOS 钥匙串，逐字稿会发送到所选服务。转写任务首次使用时需下载约 2.1 GB 语音模型；
+只下载视频或提取音频无需下载模型。
+使用 DeepSeek 时点击“使用 DeepSeek 配置”，程序会填写官方 Chat Completions 地址和 `deepseek-flash` 模型，
+用户只需再输入自己的 DeepSeek API Key。旧版保存的 `https://api.deepseek.com` 根地址会自动补齐接口路径。
+再次处理同一来源时，保存目录中由本次任务生成的同名文件会覆盖；目录内其他文件保留。
+本地视频可提取音频或转写，本地音频可转写；界面不会提供与输入同类型的目标。
+转写与笔记任务可勾选“区分说话人”。该选项默认关闭，只有用户勾选后才提示下载额外的 CAM++ 模型；
+启用后逐字稿与 SRT 会标记“说话人 1／2”等，AI 笔记也会收到带标记的逐字稿。
+说话人归属为模型推断，重叠讲话、相似声音和较长录音可能出现误分，需人工核对。
+
+源码运行需要先按下方步骤安装环境。在 Apple Silicon Mac 上构建安装包时，先运行
+`PLAYWRIGHT_BROWSERS_PATH="$PWD/vendor-browsers" .venv/bin/python -m playwright install chromium --no-shell`，
+再运行 `bash build_mac.sh` 构建 `.app`，最后运行
+`bash package_dmg.sh` 生成 `dist/VideoToMD-arm64.dmg`。构建前需在项目环境安装
+`requirements-app.txt` 和 `pyinstaller`。当前 DMG 供本机验证，内含 `.app`、
+FFmpeg、Chromium 和“应用程序”快捷方式；目标 Mac 无需预装 FFmpeg 或 Chrome。
+正式发布前仍需在干净的 Mac 上跑完整流程、准备第三方组件许可材料，并完成 Developer ID 签名与公证。
+
 ## 将你的抖音只收藏的视频整理成你的知识库
 
 ![从短视频到知识笔记的视觉封面](images/readme-cover.png)

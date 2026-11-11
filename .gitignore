@@ -10,3 +10,8 @@ __pycache__/
 config.json
 config.local.json
 hotwords.txt
+build/
+dist/
+*.spec
+vendor-browsers/
+vendor-bin/

@@ -14,7 +14,7 @@ MODELS = {
 }
 
 
-def download_required(cfg: dict) -> None:
+def download_required(cfg: dict, on_progress=None) -> None:
     from modelscope.hub.snapshot_download import snapshot_download
 
     engine = cfg.get("engine", "hybrid")
@@ -27,12 +27,15 @@ def download_required(cfg: dict) -> None:
         required.append(cfg["spk_model"])
 
     root = Path(cfg["_models_dir"])
-    for name in dict.fromkeys(required):
+    required = list(dict.fromkeys(required))
+    for index, name in enumerate(required, 1):
         model_id, weight = MODELS[name]
         target = root / name
         if (target / weight).is_file():
             print(f"已存在: {name}")
             continue
+        if on_progress:
+            on_progress(f"下载语音模型 {index}/{len(required)}：{name}")
         print(f"下载 https://modelscope.cn/models/{model_id} → {target}", flush=True)
         snapshot_download(model_id=model_id, local_dir=str(target))
         if not (target / weight).is_file():

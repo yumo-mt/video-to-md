@@ -38,6 +38,13 @@ def safe_name(text: str, limit: int = 60) -> str:
 def valid_video(path: Path) -> bool:
     if not path.is_file() or path.stat().st_size == 0:
         return False
+    if os.getenv("VIDEO_TO_MD_BUNDLED_FFMPEG"):
+        probe = subprocess.run(
+            ["ffmpeg", "-v", "error", "-i", str(path), "-map", "0:v:0",
+             "-frames:v", "1", "-f", "null", "-"],
+            capture_output=True, text=True, timeout=30,
+        )
+        return probe.returncode == 0
     probe = subprocess.run(
         ["ffprobe", "-v", "error", "-show_entries", "format=duration",
          "-of", "default=noprint_wrappers=1:nokey=1", str(path)],

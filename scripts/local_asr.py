@@ -135,7 +135,7 @@ def merge_sentences(sentences: list[dict]) -> list[dict]:
         # 只并「被硬切开的半句」；正常句号结尾的一律保留，保证 SRT 逐句粒度
         hard_cut = not tail.endswith("。！？!?…")
         merged_len = len(tail) + len(nxt)
-        if hard_cut and merged_len <= 80:
+        if hard_cut and merged_len <= 80 and prev.get("speaker") == s.get("speaker"):
             prev["text"] = tail + s["text"].lstrip()
             prev["end"] = s["end"]
         else:

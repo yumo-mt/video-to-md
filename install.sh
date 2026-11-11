@@ -107,6 +107,9 @@ if [[ ! -x .venv/bin/python ]]; then
   echo "创建项目专用 Python 环境…"
   "$PYTHON_BIN" -m venv .venv
 fi
+if ! .venv/bin/python -m pip --version >/dev/null 2>&1; then
+  .venv/bin/python -m ensurepip --upgrade
+fi
 .venv/bin/python -m pip install -r requirements.txt
 
 if [[ ! -f config.json ]]; then

@@ -42,6 +42,10 @@ def load() -> dict:
         except (json.JSONDecodeError, OSError):
             pass
     cfg["vault"] = os.getenv("DY_VAULT", cfg.get("vault") or "")
+    if os.getenv("VIDEO_TO_MD_MODELS_DIR"):
+        cfg["models_dir"] = os.environ["VIDEO_TO_MD_MODELS_DIR"]
+    if os.getenv("VIDEO_TO_MD_BROWSER_CHANNEL"):
+        cfg["browser_channel"] = os.environ["VIDEO_TO_MD_BROWSER_CHANNEL"]
     cfg["_root"] = str(ROOT)
     cfg["_models_dir"] = str((ROOT / cfg["models_dir"]).resolve()) if not Path(
         cfg["models_dir"]).is_absolute() else cfg["models_dir"]
@@ -84,7 +88,7 @@ def check(cfg: dict | None = None) -> list[str]:
             problems.append(f"模型缺失: {d}")
     if not shutil.which("ffmpeg"):
         problems.append("未找到 ffmpeg")
-    if not shutil.which("ffprobe"):
+    if not os.getenv("VIDEO_TO_MD_BUNDLED_FFMPEG") and not shutil.which("ffprobe"):
         problems.append("未找到 ffprobe")
     try:
         import funasr  # noqa: F401
