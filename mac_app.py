@@ -33,42 +33,32 @@ from download_models import download_required  # noqa: E402
 KEY_SERVICE = "video-to-md/mac-app"
 
 STYLE = """
-QMainWindow, QWidget#content { background: #f5f7f2; }
-QWidget { font-family: 'PingFang SC', 'Helvetica Neue'; font-size: 13px; color: #20332f; }
-QFrame#sidebar { background: #17352f; border: none; }
-QFrame#card, QFrame#modelCard { background: #ffffff; border: 1px solid #dce4db; border-radius: 14px; }
-QFrame#modelCard { background: #ebf3e6; border-color: #d4e4ce; }
-QFrame#activityCard { background: #ffffff; border: 1px solid #dce4db; border-radius: 12px; }
-QLabel#brand { color: #ffffff; font-size: 23px; font-weight: 700; }
-QLabel#sideCaption { color: #a8c3b6; font-size: 11px; letter-spacing: 2px; }
-QLabel#sideText { color: #d7e8dd; font-size: 13px; }
-QLabel#sideStep { color: #dcebe0; font-size: 14px; }
-QLabel#eyebrow { color: #688276; font-size: 11px; font-weight: 700; letter-spacing: 2px; }
-QLabel#hero { color: #17352f; font-size: 28px; font-weight: 700; }
-QLabel#subtitle, QLabel#hint { color: #6f8077; }
-QLabel#cardTitle { color: #203b31; font-size: 16px; font-weight: 700; }
-QLabel#fieldLabel { color: #50665b; font-size: 12px; font-weight: 600; }
-QLabel#modelStatus { color: #214a33; font-weight: 700; }
-QLineEdit { background: #fbfcfa; border: 1px solid #cbd8ce; border-radius: 8px;
-            padding: 8px 10px; min-height: 20px; selection-background-color: #c9e6a1; }
-QLineEdit:focus { border: 2px solid #5f9a65; background: white; }
-QPushButton#choice { background: #f8faf6; border: 1px solid #d3ded4; border-radius: 9px;
-                     color: #3e574b; padding: 10px 14px; text-align: center; }
-QPushButton#choice:hover { background: #eef5eb; border-color: #88aa8b; }
-QPushButton#choice:checked { background: #e3f0dc; border: 2px solid #4b8056; color: #173b2b; font-weight: 700; }
-QPushButton#choice:disabled { background: #f3f5f1; border-color: #e3e8e1; color: #a9b4ab; }
-QPushButton { background: #ffffff; color: #244438; border: 1px solid #c9d8cd;
-              border-radius: 8px; padding: 8px 16px; min-height: 20px; font-weight: 600; }
-QPushButton:hover { background: #edf4ec; }
-QPushButton:disabled { color: #a6b2a8; background: #f0f2ee; border-color: #e2e7df; }
-QPushButton#primary { background: #244f39; color: white; border-color: #244f39; padding: 9px 24px; }
-QPushButton#primary:hover { background: #326d4d; }
-QPushButton#primary:disabled { background: #becdc0; border-color: #becdc0; color: #f8faf7; }
-QPushButton#modelButton { background: #daf0ca; border-color: #9ac58a; }
-QTextEdit { background: #fbfcfa; border: 1px solid #e2e9df; border-radius: 8px;
-            padding: 10px; }
-QProgressBar { border: none; border-radius: 4px; background: #e6ede5; height: 8px; text-align: center; }
-QProgressBar::chunk { background: #5a9466; border-radius: 4px; }
+QMainWindow, QWidget#content, QScrollArea { background: #f6f8f6; }
+QWidget { font-family: 'PingFang SC', 'Helvetica Neue'; font-size: 14px; color: #1c2d28; }
+QFrame#card, QFrame#activityCard { background: #ffffff; border: 1px solid #e3e9e4; border-radius: 10px; }
+QFrame#modelCard { background: #edf5ef; border: none; border-radius: 8px; }
+QLabel#brand { color: #172c23; font-size: 25px; font-weight: 700; }
+QLabel#subtitle, QLabel#hint { color: #5d7066; font-size: 13px; }
+QLabel#cardTitle { color: #1c2d28; font-size: 17px; font-weight: 600; }
+QLabel#fieldLabel { color: #344a3d; font-size: 13px; font-weight: 600; }
+QLabel#modelStatus { color: #25533a; font-weight: 600; }
+QLineEdit, QTextEdit { background: white; border: 1px solid #cdd9d0; border-radius: 7px;
+                       padding: 8px 11px; selection-background-color: #d7e8d8; }
+QLineEdit { min-height: 22px; }
+QLineEdit:focus, QTextEdit:focus { border: 1px solid #3d805b; }
+QPushButton { background: white; color: #244736; border: 1px solid #cdd9d0;
+              border-radius: 7px; padding: 8px 14px; min-height: 22px; font-weight: 600; }
+QPushButton:hover { background: #f2f7f2; }
+QPushButton:disabled { color: #77897e; background: #f3f5f3; border-color: #e1e7e2; }
+QPushButton#choice { background: #f7f9f7; color: #344a3d; border-color: #e2e9e3; }
+QPushButton#choice:checked { background: #e5f1e7; color: #1d5637; border-color: #9abfa4; }
+QPushButton#choice:disabled { background: #f4f5f4; color: #8b998f; border-color: #edf0ed; }
+QPushButton#primary { background: #214b34; color: white; border-color: #214b34; padding: 9px 22px; }
+QPushButton#primary:hover { background: #2d6245; }
+QPushButton#primary:disabled { background: #a8baad; border-color: #a8baad; color: white; }
+QPushButton#modelButton { background: white; }
+QProgressBar { border: none; border-radius: 3px; background: #deebe1; height: 7px; text-align: center; }
+QProgressBar::chunk { background: #397a53; border-radius: 3px; }
 """
 
 
@@ -162,7 +152,7 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle("视频转知识")
         self.resize(1040, 840)
-        self.setMinimumSize(920, 650)
+        self.setMinimumSize(760, 600)
         self.setStyleSheet(STYLE)
         self.settings = QSettings("video-to-md", "mac-app")
         self.worker = None
@@ -226,10 +216,10 @@ class MainWindow(QMainWindow):
         source_card.setObjectName("card")
         source = QVBoxLayout(source_card)
         source.setSizeConstraint(QLayout.SizeConstraint.SetMinimumSize)
-        source.setContentsMargins(20, 16, 20, 18)
-        source.setSpacing(8)
-        source.addWidget(self.label("01  输入与目标", "cardTitle"))
-        source.addWidget(self.label("选择现有文件或公开视频链接，再选择最终产物。", "hint"))
+        source.setContentsMargins(24, 22, 24, 24)
+        source.setSpacing(10)
+        source.addWidget(self.label("输入与产物", "cardTitle"))
+        source.addWidget(self.label("选择素材，再指定要得到的文件或笔记。", "hint"))
         source.addWidget(self.label("输入来源", "fieldLabel"))
         source.addWidget(self.source_type)
         source.addLayout(source_row)
@@ -252,33 +242,28 @@ class MainWindow(QMainWindow):
 
         ai_card = QFrame()
         ai_card.setObjectName("card")
-        ai_card.setMinimumHeight(205)
         ai_layout = QVBoxLayout(ai_card)
-        ai_layout.setContentsMargins(20, 16, 20, 18)
-        ai_layout.setSpacing(8)
+        ai_layout.setSizeConstraint(QLayout.SizeConstraint.SetMinimumSize)
+        ai_layout.setContentsMargins(24, 22, 24, 24)
+        ai_layout.setSpacing(10)
         ai_title = QHBoxLayout()
-        ai_title.addWidget(self.label("02  笔记整理 · AI 设置", "cardTitle"))
+        ai_title.addWidget(self.label("笔记整理", "cardTitle"))
         ai_title.addStretch()
         preset = QPushButton("使用 DeepSeek 配置")
         preset.clicked.connect(self.use_deepseek)
         ai_title.addWidget(preset)
         ai_layout.addLayout(ai_title)
-        ai_layout.addWidget(self.label("使用 DeepSeek 时点右侧按钮，再填写 API Key；也可手动填写其他兼容服务。", "hint"))
-        ai_form = QGridLayout()
-        ai_form.setColumnStretch(1, 1)
-        ai_form.setHorizontalSpacing(14)
-        ai_form.setVerticalSpacing(8)
-        ai_form.addWidget(self.label("API 地址", "fieldLabel"), 0, 0)
-        ai_form.addWidget(self.api_url, 0, 1)
-        ai_form.addWidget(self.label("模型", "fieldLabel"), 1, 0)
-        ai_form.addWidget(self.model, 1, 1)
-        ai_form.addWidget(self.label("API Key", "fieldLabel"), 2, 0)
-        ai_form.addWidget(self.key, 2, 1)
-        ai_layout.addLayout(ai_form)
+        ai_layout.addWidget(self.label("连接兼容 Chat Completions 的服务，整理逐字稿。", "hint"))
+        ai_layout.addWidget(self.label("API 地址", "fieldLabel"))
+        ai_layout.addWidget(self.api_url)
+        ai_layout.addWidget(self.label("模型", "fieldLabel"))
+        ai_layout.addWidget(self.model)
+        ai_layout.addWidget(self.label("API Key", "fieldLabel"))
+        ai_layout.addWidget(self.key)
         ai_layout.addWidget(self.label("笔记提示词", "fieldLabel"))
         self.note_prompt = QTextEdit()
         self.note_prompt.setPlainText(self.settings.value("note_prompt", DEFAULT_NOTE_PROMPT))
-        self.note_prompt.setMinimumHeight(110)
+        self.note_prompt.setFixedHeight(150)
         ai_layout.addWidget(self.note_prompt)
         ai_layout.addWidget(self.label("逐字稿会自动附加。请保留 JSON 字段和原文引用要求，否则可能无法生成笔记。", "hint"))
         self.ai_card = ai_card
@@ -328,7 +313,7 @@ class MainWindow(QMainWindow):
         activity_card = QFrame()
         activity_card.setObjectName("activityCard")
         activity = QVBoxLayout(activity_card)
-        activity.setContentsMargins(18, 12, 18, 12)
+        activity.setContentsMargins(20, 14, 20, 14)
         activity.setSpacing(8)
         activity.addWidget(self.status)
         activity.addWidget(self.task_progress)
@@ -339,58 +324,35 @@ class MainWindow(QMainWindow):
         preview_card = QFrame()
         preview_card.setObjectName("card")
         preview_layout = QVBoxLayout(preview_card)
-        preview_layout.setContentsMargins(20, 14, 20, 18)
+        preview_layout.setContentsMargins(24, 20, 24, 24)
+        self.preview.setMinimumHeight(160)
         preview_layout.addWidget(self.label("结果预览", "cardTitle"))
         preview_layout.addWidget(self.preview, 1)
 
-        sidebar = QFrame()
-        sidebar.setObjectName("sidebar")
-        sidebar.setFixedWidth(238)
-        side = QVBoxLayout(sidebar)
-        side.setContentsMargins(25, 34, 22, 26)
-        side.setSpacing(15)
-        side.addWidget(self.label("VIDEO  →  KNOWLEDGE", "sideCaption"))
-        side.addWidget(self.label("视频转知识", "brand"))
-        side.addSpacing(18)
-        side.addWidget(self.label("四步，留住值得记住的内容。", "sideText"))
-        side.addSpacing(24)
-        for step in ("01   视频下载", "02   音频提取", "03   语音转文字", "04   重点内容整理"):
-            side.addWidget(self.label(step, "sideStep"))
-            side.addSpacing(6)
-        side.addStretch()
-        side.addWidget(self.label("本地转写 · 自选 AI 服务", "sideText"))
-
         content = QWidget()
         content.setObjectName("content")
-        content.setMinimumHeight(1180)
         layout = QVBoxLayout(content)
-        layout.setContentsMargins(0, 18, 0, 24)
-        layout.setSpacing(12)
-        layout.addWidget(self.label("YOUR WORKSPACE", "eyebrow"))
-        layout.addWidget(self.label("把视频变成可检索的知识", "hero"))
-        layout.addWidget(self.label("从链接或本地文件开始，按需保存每一步的产物。", "subtitle"))
+        layout.setSizeConstraint(QLayout.SizeConstraint.SetMinimumSize)
+        layout.setContentsMargins(0, 8, 0, 24)
+        layout.setSpacing(16)
         layout.addWidget(source_card)
         layout.addWidget(ai_card)
-        layout.addWidget(preview_card, 1)
+        layout.addWidget(preview_card)
 
         root = QWidget()
-        root_layout = QHBoxLayout(root)
-        root_layout.setContentsMargins(0, 0, 0, 0)
-        root_layout.setSpacing(0)
-        root_layout.addWidget(sidebar)
+        root.setObjectName("content")
+        root_layout = QVBoxLayout(root)
+        root_layout.setContentsMargins(32, 24, 32, 20)
+        root_layout.setSpacing(14)
+        root_layout.addWidget(self.label("视频转知识", "brand"))
+        root_layout.addWidget(self.label("下载视频、提取音频、生成逐字稿与 Obsidian 笔记", "subtitle"))
         scroller = QScrollArea()
         scroller.setFrameShape(QFrame.Shape.NoFrame)
         scroller.setWidgetResizable(True)
         scroller.setWidget(content)
-        right = QWidget()
-        right.setObjectName("content")
-        right_layout = QVBoxLayout(right)
-        right_layout.setContentsMargins(28, 16, 28, 0)
-        right_layout.setSpacing(10)
-        right_layout.addLayout(model_box)
-        right_layout.addWidget(activity_card)
-        right_layout.addWidget(scroller, 1)
-        root_layout.addWidget(right, 1)
+        root_layout.addLayout(model_box)
+        root_layout.addWidget(activity_card)
+        root_layout.addWidget(scroller, 1)
         self.setCentralWidget(root)
         self.update_choices()
 
