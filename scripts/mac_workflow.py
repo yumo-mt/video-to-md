@@ -47,15 +47,21 @@ def chat_endpoint(url: str) -> str:
     return url
 
 
-def summarize(folder: Path, api_url: str, model: str, api_key: str) -> Path:
+DEFAULT_NOTE_PROMPT = ("根据以下逐字稿输出 JSON 对象。字段：title 字符串、category 字符串、tags 字符串数组、"
+                       "related_notes 空数组、conclusion/key_points/steps/caveats 数组。每个数组元素是"
+                       "{text: 字符串, source_quotes: [逐字稿中逐字存在的短句]}。conclusion 至少一条。"
+                       "不要编造，不要输出 Markdown 或代码围栏。")
+
+
+def summarize(folder: Path, api_url: str, model: str, api_key: str,
+              note_prompt: str = DEFAULT_NOTE_PROMPT) -> Path:
     transcript = (folder / "transcript_raw.txt").read_text(encoding="utf-8").strip()
     if not transcript:
         raise ValueError("逐字稿为空，无法生成重点")
     api_url = chat_endpoint(api_url)
-    prompt = ("根据以下逐字稿输出 JSON 对象。字段：title 字符串、category 字符串、tags 字符串数组、"
-              "related_notes 空数组、conclusion/key_points/steps/caveats 数组。每个数组元素是"
-              "{text: 字符串, source_quotes: [逐字稿中逐字存在的短句]}。conclusion 至少一条。"
-              "不要编造，不要输出 Markdown 或代码围栏。\n\n逐字稿：\n" + transcript)
+    if not note_prompt.strip():
+        raise ValueError("笔记提示词不能为空")
+    prompt = note_prompt.strip() + "\n\n逐字稿：\n" + transcript
     response = requests.post(api_url, headers={"Authorization": f"Bearer {api_key}"},
                              json={"model": model, "messages": [
                                  {"role": "system", "content": "你是严谨的中文视频内容整理助手。只返回 JSON。"},
@@ -118,6 +124,7 @@ def speaker_sentences(sentences: list[dict]) -> list[dict]:
 def run_task(source: str, source_type: str, target: str, destination: Path, *,
              keep: set[str] | None = None, vault: Path | None = None,
              api_url: str = "", model: str = "", api_key: str = "",
+             note_prompt: str = DEFAULT_NOTE_PROMPT,
              cache_root: Path | None = None, on_stage=stage,
              distinguish_speakers: bool = False) -> dict:
     """Run only the stages required by the selected final output."""
@@ -210,7 +217,7 @@ def run_task(source: str, source_type: str, target: str, destination: Path, *,
         note_path = None
         if target == "obsidian":
             on_stage("整理并写入 Obsidian")
-            summarize(job, api_url, model, api_key)
+            summarize(job, api_url, model, api_key, note_prompt)
             from note_builder import build
             staging = job / str(info["video_id"])
             staging.mkdir()

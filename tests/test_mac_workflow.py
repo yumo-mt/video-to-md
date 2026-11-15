@@ -171,9 +171,11 @@ class MacWorkflowTests(unittest.TestCase):
                     pass
                 def json(self):
                     return {"choices": [{"message": {"content": json.dumps(data)}}]}
-            with patch.object(mac_workflow.requests, "post", return_value=Response()):
+            with patch.object(mac_workflow.requests, "post", return_value=Response()) as post:
                 with self.assertRaisesRegex(ValueError, "原文依据"):
-                    mac_workflow.summarize(folder, "https://example.com/chat/completions", "model", "key")
+                    mac_workflow.summarize(folder, "https://example.com/chat/completions", "model", "key", "自定义整理要求")
+            self.assertIn("自定义整理要求\n\n逐字稿：\n真实原文",
+                          post.call_args.kwargs["json"]["messages"][1]["content"])
             self.assertFalse((folder / "重点整理.md").exists())
 
 

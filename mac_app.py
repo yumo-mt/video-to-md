@@ -26,7 +26,7 @@ if getattr(sys, "frozen", False):
     os.environ["PLAYWRIGHT_BROWSERS_PATH"] = str(resources / "browsers")
     os.environ["VIDEO_TO_MD_BROWSER_CHANNEL"] = "chromium"
 sys.path.insert(0, str(ROOT / "scripts"))
-from mac_workflow import run_task, clean_cache, chat_endpoint  # noqa: E402
+from mac_workflow import run_task, clean_cache, chat_endpoint, DEFAULT_NOTE_PROMPT  # noqa: E402
 import config as cfg_mod  # noqa: E402
 from download_models import download_required  # noqa: E402
 
@@ -141,16 +141,16 @@ class Worker(QThread):
     completed = Signal(object)
     failed = Signal(str)
 
-    def __init__(self, source: str, kind: str, target: str, dest: str, keep: set[str], vault: str, url: str, model: str, key: str, speakers: bool = False):
+    def __init__(self, source: str, kind: str, target: str, dest: str, keep: set[str], vault: str, url: str, model: str, key: str, note_prompt: str, speakers: bool = False):
         super().__init__()
-        self.options = (source, kind, target, dest, keep, vault, url, model, key, speakers)
+        self.options = (source, kind, target, dest, keep, vault, url, model, key, note_prompt, speakers)
 
     def run(self) -> None:
-        source, kind, target, dest, keep, vault, url, model, key, speakers = self.options
+        source, kind, target, dest, keep, vault, url, model, key, note_prompt, speakers = self.options
         try:
             result = run_task(source, kind, target, Path(dest), keep=keep,
                               vault=Path(vault) if vault else None, api_url=url, model=model,
-                              api_key=key, on_stage=self.progress.emit,
+                              api_key=key, note_prompt=note_prompt, on_stage=self.progress.emit,
                               distinguish_speakers=speakers)
             self.completed.emit(result)
         except Exception as exc:
@@ -275,6 +275,12 @@ class MainWindow(QMainWindow):
         ai_form.addWidget(self.label("API Key", "fieldLabel"), 2, 0)
         ai_form.addWidget(self.key, 2, 1)
         ai_layout.addLayout(ai_form)
+        ai_layout.addWidget(self.label("笔记提示词", "fieldLabel"))
+        self.note_prompt = QTextEdit()
+        self.note_prompt.setPlainText(self.settings.value("note_prompt", DEFAULT_NOTE_PROMPT))
+        self.note_prompt.setMinimumHeight(110)
+        ai_layout.addWidget(self.note_prompt)
+        ai_layout.addWidget(self.label("逐字稿会自动附加。请保留 JSON 字段和原文引用要求，否则可能无法生成笔记。", "hint"))
         self.ai_card = ai_card
 
         self.start = QPushButton("开始处理")
@@ -504,6 +510,10 @@ class MainWindow(QMainWindow):
         if target == "obsidian" and (not all((url, model, key)) or not Path(self.vault.text()).is_dir()):
             QMessageBox.warning(self, "设置不完整", "请选择 Obsidian 知识库，并填写 API 地址、模型和 API Key。")
             return
+        note_prompt = self.note_prompt.toPlainText().strip()
+        if target == "obsidian" and not note_prompt:
+            QMessageBox.warning(self, "提示词为空", "请填写笔记提示词。")
+            return
         if target == "obsidian":
             try:
                 url = chat_endpoint(url)
@@ -520,13 +530,15 @@ class MainWindow(QMainWindow):
         self.settings.setValue("api_url", url)
         self.settings.setValue("model", model)
         self.settings.setValue("vault", self.vault.text())
+        if target == "obsidian":
+            self.settings.setValue("note_prompt", note_prompt)
         self.start.setEnabled(False)
         self.open_button.setEnabled(False)
         self.preview.clear()
         keep = {name for name, widget in (("video", self.keep_video), ("audio", self.keep_audio),
                                           ("transcript", self.keep_transcript)) if widget.isVisible() and widget.isChecked()}
         self.worker = Worker(link, self.source_type.currentData(), target, dest, keep,
-                             self.vault.text(), url, model, key,
+                             self.vault.text(), url, model, key, note_prompt,
                              self.speakers.isVisible() and self.speakers.isChecked())
         self.task_steps = (["解析抖音链接", "下载视频"] if self.source_type.currentData() == "douyin" else [])
         if target in {"audio", "transcript", "obsidian"} and self.source_type.currentData() != "audio":
