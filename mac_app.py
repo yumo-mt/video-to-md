@@ -12,7 +12,7 @@ from PySide6.QtCore import QSettings, QThread, Signal, QTimer
 from PySide6.QtGui import QDesktopServices
 from PySide6.QtWidgets import (QApplication, QFileDialog, QFrame, QGridLayout,
                                QHBoxLayout, QLabel, QLineEdit, QMainWindow, QCheckBox,
-                               QMessageBox, QPushButton, QScrollArea, QTextEdit,
+                               QMessageBox, QPushButton, QScrollArea, QTextEdit, QLayout,
                                QVBoxLayout, QWidget, QProgressBar)
 from PySide6.QtCore import QUrl
 
@@ -224,8 +224,8 @@ class MainWindow(QMainWindow):
 
         source_card = QFrame()
         source_card.setObjectName("card")
-        source_card.setMinimumHeight(445)
         source = QVBoxLayout(source_card)
+        source.setSizeConstraint(QLayout.SizeConstraint.SetMinimumSize)
         source.setContentsMargins(20, 16, 20, 18)
         source.setSpacing(8)
         source.addWidget(self.label("01  输入与目标", "cardTitle"))
