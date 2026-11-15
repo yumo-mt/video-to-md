@@ -6,7 +6,7 @@
 
 ## 下载 macOS 版
 
-**[下载 VideoToMD v0.1.0 beta 1（Apple Silicon）](https://github.com/yumo-mt/video-to-md/releases/tag/v0.1.0-beta.1)**
+**[下载 VideoToMD v0.1.0 beta 2（Apple Silicon）](https://github.com/yumo-mt/video-to-md/releases/tag/v0.1.0-beta.2)**
 
 在 Release 页的 **Assets** 中下载 `VideoToMD-arm64.dmg`。`Source code (zip)` 和 `Source code (tar.gz)` 只有源码，不能直接安装。
 
@@ -19,7 +19,7 @@
 此版本尚未完成 Apple Developer ID 签名与公证，macOS 可能阻止首次打开。请确认文件来自本仓库的 Release 页面，再按系统提示手动允许打开。发布文件的 SHA-256 为：
 
 ```text
-5546e46b0d481187c742ca9840e31fdc80b664b017940b89a9f7fa237a6dab01  VideoToMD-arm64.dmg
+a2bf9601a37e1b20ae92112df8f572946110dd1e2cbc91229522dc5316a3f5a8  VideoToMD-arm64.dmg
 ```
 
 可在终端运行 `shasum -a 256 ~/Downloads/VideoToMD-arm64.dmg` 核对下载文件。
@@ -38,7 +38,7 @@
 
 ### 生成 Obsidian 笔记
 
-目前笔记功能的输入是**公开抖音视频链接**。选择 Obsidian 知识库文件夹，并填写兼容 Chat Completions 的 HTTPS API 地址、模型名称和自己的 API Key。使用 DeepSeek 可以点击“使用 DeepSeek 配置”填入接口地址和模型，再填写 API Key。
+目前笔记功能的输入是**公开抖音视频链接**。选择 Obsidian 知识库文件夹，并填写兼容 Chat Completions 的 HTTPS API 地址、模型名称和自己的 API Key。使用 DeepSeek 可以点击“使用 DeepSeek 配置”填入接口地址和模型，再填写 API Key。选择“Obsidian 笔记”时还可编辑默认提示词；逐字稿由程序自动附加。
 
 语音识别在本机运行，不需要语音识别 API Key。生成笔记时，逐字稿会发送给你选择的 AI 服务；费用和数据处理规则取决于该服务。API Key 保存在 macOS 钥匙串中，首次使用请允许钥匙串访问。
 
